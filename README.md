@@ -92,3 +92,39 @@ Updating credentials...
 Credentials updated!
 DevEui: 2C:F7:F1:20:53:70:00:06, DevAddr: 32:30:C9:A3, AppEui: 80:00:00:00:00:00:00:09
 ```
+
+## Virtual Environment Usage
+
+This project is managed with Poetry, which supports both virtual environments for isolation and direct system-wide installation. You can choose the approach that best fits your workflow.
+
+### Without Using a Virtual Environment
+
+If you prefer not to use a virtual environment, ensure your system has the required Python version and dependencies. This method may lead to conflicts with other Python projects or system packages.
+
+### Install Poetry
+
+To install Poetry, execute:
+
+```shell
+curl -sSL https://install.python-poetry.org | python3 -
+```
+
+### Setup the Project with a Virtual Environment
+
+1. **Install Dependencies**: In the project directory, run:
+
+   ```shell
+   poetry install
+   ```
+
+   This command installs dependencies and optionally sets up a virtual environment.
+
+2. **Activate the Virtual Environment**: To avoid conflicts with the system-wide Python interpreter and ensure project dependencies are managed separately, activate the virtual environment:
+
+   ```shell
+   poetry shell
+   ```
+
+Using a virtual environment is recommended to isolate project dependencies, providing a controlled development environment and minimizing potential conflicts.
+
+For more details, visit [Poetry's official documentation](https://python-poetry.org/docs/).

@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.5"
-serial = "^0.0.97"
+pyserial = "^3.5"
 
 
 [build-system]
