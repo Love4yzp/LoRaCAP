@@ -2,6 +2,8 @@ import re
 from loracap.ATProtocol import *
 from loracap.utility import *
 from loracap.macro import *
+from typing import Optional
+NO_RESPONSE = '_'
 
 class LoRaMode(ATProtocol):
 
@@ -13,13 +15,47 @@ class LoRaMode(ATProtocol):
     def connection_made(self, transport):
         super(LoRaMode, self).connection_made(transport)
         self.transport.serial.reset_input_buffer()
- 
+
+    def fetch(self, command):
+        """
+        Directly command set without waiting for response.
+        """
+        return self.command(command, NO_RESPONSE)
+
+    def command(self, command, response='OK', timeout=5) -> Optional[str]:
+        """
+        Set an AT command and wait for the response.
+        """
+        with self.lock:  # ensure that just one thread is sending commands at once
+            self.write_line(command)
+            while True:
+                try:
+                    line = self.responses.get(timeout=timeout)
+                    logging.debug("%s -> %r", command, line)
+                    if response == NO_RESPONSE or response in line:
+                        return line
+                except queue.Empty:
+                    raise ATException('AT command timeout ({!r})'.format(command))
+    
+    def __transmitData(self, type:str, data:str) -> str:
+        sub_command = ['TXLRPKT', 'TXLRSTR']
+        if type not in sub_command:
+            raise ValueError('type must be one of {}'.format(sub_command))
+        command = f"AT+TEST={type}, \"{data}\"" 
+        return self.fetch(command)
+    
+    def send_str(self, text:str):
+        return self.__transmitData('TXLRSTR', text)
+    
+    def send_hex(self, text:str):
+        return self.__transmitData('TXLRPKT', text)
+
     def isConnected(self):
         return 'OK' in self.command("AT", response='OK')
 
     def __str__(self):
         return f"DevEui: {self.DevEui}, DevAddr: {self.DevAddr}, AppEui: {self.AppEui}"
- 
+
     @property
     def LogLevel(self):
         raise AttributeError("""
@@ -80,11 +116,11 @@ class LoRaMode(ATProtocol):
     def NwkSKey(self, value):
         formatted_value = validate_and_format_hex(value, 32)  # AppEui should be 16 hexadecimal characters
         return self.fetch(f'AT+KEY=NWKSKEY,\"{formatted_value}\"')
-   
+
     @property
     def AppSKey(self):
         logging.error('AppSKey is write-only for security reasons.')
- 
+
     @AppSKey.setter
     def AppSKey(self, value):
         formatted_value = validate_and_format_hex(value, 32)  # AppEui should be 16 hexadecimal characters

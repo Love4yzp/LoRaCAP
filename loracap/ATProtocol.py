@@ -8,7 +8,6 @@ try:
 except ImportError:
     import Queue as queue
 
-NO_RESPONSE = '_'
 
 class ATException(Exception):
     pass
@@ -63,29 +62,20 @@ class ATProtocol(serial.threaded.LineReader):
         """
         print('event received:', event)
 
-    def fetch(self, command):
-        """
-        Directly command set without waiting for response.
-        """
-        return self.command(command, NO_RESPONSE)
-
     def command(self, command, response='OK', timeout=5):
         """
         Set an AT command and wait for the response.
         """
         with self.lock:  # ensure that just one thread is sending commands at once
             self.write_line(command)
-            # lines = []
+            lines = []
             while True:
                 try:
                     line = self.responses.get(timeout=timeout)
                     # print("%s -> %r" % (command, line))
-                    logging.debug("%s -> %r", command, line)
-                    # if line == response:
-                        # return lines
-                    # else:
-                        # lines.append(line)
-                    if response == NO_RESPONSE or response in line:
-                        return line
+                    if line == response:
+                        return lines
+                    else:
+                        lines.append(line)
                 except queue.Empty:
                     raise ATException('AT command timeout ({!r})'.format(command))
