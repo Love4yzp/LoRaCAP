@@ -34,21 +34,23 @@ class LoRaMode(ATProtocol):
                     logging.debug("%s -> %r", command, line)
                     if response == NO_RESPONSE or response in line:
                         return line
+                    elif 'ERROR' in line:
+                        return None
                 except queue.Empty:
                     raise ATException('AT command timeout ({!r})'.format(command))
     
-    def __transmitData(self, type:str, data:str) -> str:
+    def __transmitData(self, type:str, data:str) -> Optional[str]:
         sub_command = ['TXLRPKT', 'TXLRSTR']
         if type not in sub_command:
             raise ValueError('type must be one of {}'.format(sub_command))
         command = f"AT+TEST={type}, \"{data}\"" 
         return self.command(command, 'TX DONE', 10)
     
-    def send_str(self, text:str):
-        return self.__transmitData('TXLRSTR', text)
+    def send_str(self, text:str) -> bool:
+        return self.__transmitData('TXLRSTR', text) is not None
     
     def send_hex(self, text:str):
-        return self.__transmitData('TXLRPKT', text)
+        return self.__transmitData('TXLRPKT', text) is not None
 
     def isConnected(self):
         return 'OK' in self.command("AT", response='OK')
