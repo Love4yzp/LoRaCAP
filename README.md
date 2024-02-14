@@ -11,9 +11,8 @@ This Python code is designed to facilitate P2P communication using a LoRaE5 modu
 ## Key Components of the Code
 
 - **Serial Communication Setup**: Establishes communication with the LoRaE5 module using the `serial` library.
-- **Threading for Asynchronous Reading**: Utilizes the `threading` library to continuously read data from the LoRaE5 module without blocking the main program.
-- **Regular Expressions for Data Parsing**: Uses the `re` library to parse and extract hexadecimal values from received messages.
-- **LoRaE5 Macro Definitions**: Includes specific settings such as baud rate and timeout values for the LoRaE5 module, defined in `LoRaE5_Macro`.
+<!-- - **LoRaE5 Macro Definitions**: Includes specific settings such as baud rate and timeout values for the LoRaE5 module, defined in `marcos.py`.
+- **Regular Expressions for Data Parsing**: Uses the `re` library to parse and extract hexadecimal values from received messages. -->
 
 ### Steps to Implement P2P Communication
 

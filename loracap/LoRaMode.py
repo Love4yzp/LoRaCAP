@@ -42,7 +42,7 @@ class LoRaMode(ATProtocol):
         if type not in sub_command:
             raise ValueError('type must be one of {}'.format(sub_command))
         command = f"AT+TEST={type}, \"{data}\"" 
-        return self.fetch(command)
+        return self.command(command, 'TX DONE', 10)
     
     def send_str(self, text:str):
         return self.__transmitData('TXLRSTR', text)

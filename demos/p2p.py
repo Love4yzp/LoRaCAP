@@ -5,6 +5,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from loracap.LoRaMode import *
 
+def payload():
+    return 'Hello World!'
+
+def coder(data):
+    pass
+
 class demo(LoRaMode):
     def __init__(self):
         super(LoRaMode, self).__init__()
@@ -23,6 +29,11 @@ class demo(LoRaMode):
         else:
             logging.warning('unhandled event: {!r}'.format(event))
 
+    def decoder(self, data):
+        return data
+    
+    def coder(self, data):
+        return data
 
 # if __name__ == '__main__':
 ser = serial.serial_for_url('/dev/ttyS0', baudrate=9600, timeout=1)

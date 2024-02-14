@@ -11,7 +11,7 @@ data_to_send = {
     "humidity": 48, 
 }
 
-class demo(LoRaMode):
+class uploader(LoRaMode):
     def __init__(self):
         super(LoRaMode, self).__init__()
     
@@ -37,14 +37,17 @@ class demo(LoRaMode):
 
 if __name__ == '__main__':
     ser = serial.serial_for_url('/dev/ttyS0', baudrate=9600, timeout=1)
-    with serial.threaded.ReaderThread(ser, demo) as lorae5:
-        logging.basicConfig(level=logging.DEBUG,
-                            format='%(asctime)s - %(message)s')
-        # lorae5.mode = 'TEST'
-        print(f"lorae5 Current Mode: {lorae5.mode}")
-        
+    with serial.threaded.ReaderThread(ser, uploader) as lorae5:
+        lorae5.mode = 'TEST'
         encoded_data = json.dumps(data_to_send)
         print("Encoded data:", encoded_data)
+
+        logging.basicConfig(level=logging.DEBUG,
+                            format='%(asctime)s - %(message)s')
+
+        ret = "Success" if lorae5.send_str(encoded_data) else "Fail"
+        print(f"Send String {ret}")
         
-        lorae5.send_str(encoded_data)
+        ret = "Success" if lorae5.send_hex(encoded_data.encode().hex()) else "Fail"
+        print(f"Send Hex {ret}")
         
