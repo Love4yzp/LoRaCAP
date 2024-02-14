@@ -26,3 +26,4 @@ if __name__ == '__main__':
 
         print("Change to TEST Mode")
         lorae5.mode = 'TEST'
+        print(f"Current Mode: {lorae5.mode}")

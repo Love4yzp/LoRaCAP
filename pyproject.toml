@@ -1,12 +1,13 @@
 [tool.poetry]
-name = "-lorae5"
+name = "loracap"
 version = "0.1.0"
 description = ""
 authors = ["Spencer <love4yzp@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.5"
+serial = "^0.0.97"
 
 
 [build-system]

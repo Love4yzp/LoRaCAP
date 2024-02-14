@@ -19,7 +19,7 @@ if __name__ == "__main__":
     read_thread.start()
     _thread, lorae5 = read_thread.connect()
     
-    print("Credentials: \n{}".format(lorae5)) 
+    print("Credentials: \n{}\n".format(lorae5)) 
     
     print("Updating credentials...")
     # lorae5.DevEui = '2CF7F12053700006'

@@ -32,40 +32,48 @@ This Python code is designed to facilitate P2P communication using a LoRaE5 modu
 
 ### Switch Mode
 ```Python
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from loracap.LoRaMode import *
 
-from LoRaTESTMode import *
+class Switch(LoRaMode):
+    def __init__(self):
+        super(LoRaMode, self).__init__()
+    def handle_line(self, line):
+        """
+        We don't need any events for this example.
+        """
+        self.responses.put(line)
  
 ser = serial.serial_for_url('/dev/ttyS0', baudrate=9600, timeout=1)
-with serial.threaded.ReaderThread(ser, LoRaTESTMode) as lorae5:
+with serial.threaded.ReaderThread(ser, Switch) as lorae5:
    print(f"Current Mode: {lorae5.mode}")
-   
-   print("Change to TEST Mode")
-   lorae5.mode = 'TEST'
    
    print("Change to LWOTAA Mode")
    lorae5.mode = 'LWOTAA'
    
    print("Change to LWABP Mode")
    lorae5.mode = 'LWABP'
-```
 
+   print("Change to TEST Mode")
+   lorae5.mode = 'TEST'
+   print(f"Current Mode: {lorae5.mode}")
+```
+```shell
+Current Mode: LWOTAA
+Change to LWOTAA Mode
+Change to LWABP Mode
+Change to TEST Mode
+Current Mode: TEST
+```
 ### Update Credential of LoRa-E5
 ```Python
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-
-from LoRaTESTMode import *
+from loracap.LoRaMode import *
 
 ser = serial.serial_for_url('/dev/ttyS0', baudrate=9600, timeout=1)
 read_thread = serial.threaded.ReaderThread(ser, LoRaTESTMode)
 read_thread.start()
 _thread, lorae5 = read_thread.connect()
 
-print("Credentials: \n{}".format(lorae5)) 
+print("Credentials: \n{}\n".format(lorae5)) 
 
 print("Updating credentials...")
 # lorae5.DevEui = '2CF7F12053700006'
@@ -76,4 +84,12 @@ lorae5.DevAddr = '32:30:C9:A3'
 lorae5.AppEui = '80:00:00:00:00:00:00:09'
 
 print("Credentials updated!\n{}".format(lorae5))
+```
+```shell
+Credentials: 
+DevEui: 2C:F7:F1:20:53:77:88:99, DevAddr: 42:33:55:A4, AppEui: 80:00:00:00:FF:00:00:10
+
+Updating credentials...
+Credentials updated!
+DevEui: 2C:F7:F1:20:53:70:00:06, DevAddr: 32:30:C9:A3, AppEui: 80:00:00:00:00:00:00:09
 ```
