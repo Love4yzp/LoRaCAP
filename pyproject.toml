@@ -6,9 +6,9 @@ authors = ["Spencer <love4yzp@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.5"
+python = "^3.8"
 pyserial = "^3.5"
-
+crc = "^6.1.0"
 
 [build-system]
 requires = ["poetry-core"]
