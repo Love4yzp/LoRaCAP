@@ -15,6 +15,9 @@ class Switch(LoRaMode):
 
 if __name__ == '__main__':
     ser = serial.serial_for_url('/dev/ttyS0', baudrate=9600, timeout=1)
+    # read_thread = serial.threaded.ReaderThread(ser, Switch)
+    # read_thread.start()
+    # _thread, lorae5 = read_thread.connect()
     with serial.threaded.ReaderThread(ser, Switch) as lorae5:
         print(f"Current Mode: {lorae5.mode}")
         
